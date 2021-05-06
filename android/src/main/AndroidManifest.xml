@@ -1,5 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.queelag.capacitor.biometric.capacitorbiometric">
 
-  <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="com.queelag.capacitor.biometric.capacitorbiometric">
-  </manifest>
-  
+    <application>
+        <activity
+            android:name="com.queelag.capacitor.biometric.BiometricPromptActivity"
+            android:theme="@style/AppTheme.Transparent" />
+    </application>
+
+</manifest>
