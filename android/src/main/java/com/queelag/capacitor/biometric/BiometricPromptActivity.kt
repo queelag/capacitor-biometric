@@ -52,9 +52,9 @@ class BiometricPromptActivity : AppCompatActivity() {
         return BiometricPrompt.PromptInfo.Builder()
                 .setConfirmationRequired(intent.getBooleanExtra("confirmationRequired", false))
                 .setDescription(intent.getStringExtra("description"))
-                .setNegativeButtonText(if (intent.hasExtra("negativeButtonText")) intent.getStringExtra("negativeButtonText") else "Cancel")
+                .setNegativeButtonText(if (intent.hasExtra("negativeButtonText")) intent.getStringExtra("negativeButtonText").orEmpty() else "Cancel")
                 .setSubtitle(intent.getStringExtra("subtitle"))
-                .setTitle(if (intent.hasExtra("title")) intent.getStringExtra("title") else "Authenticate")
+                .setTitle(if (intent.hasExtra("title")) intent.getStringExtra("title").orEmpty() else "Authenticate")
                 .build()
     }
 

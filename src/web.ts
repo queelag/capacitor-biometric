@@ -1,4 +1,4 @@
-import { registerWebPlugin, WebPlugin } from '@capacitor/core';
+import { WebPlugin } from '@capacitor/core';
 import {
   BiometricPlugin,
   BiometricPluginPromptBody,
@@ -10,13 +10,6 @@ import {
 } from './definitions';
 
 export class BiometricWeb extends WebPlugin implements BiometricPlugin {
-  constructor() {
-    super({
-      name: 'Biometric',
-      platforms: ['web'],
-    });
-  }
-
   async isAvailable(): Promise<void> {
     throw new Error();
   }
@@ -65,9 +58,3 @@ export class BiometricWeb extends WebPlugin implements BiometricPlugin {
     throw new Error();
   }
 }
-
-const Biometric = new BiometricWeb();
-
-export { Biometric };
-
-registerWebPlugin(Biometric);

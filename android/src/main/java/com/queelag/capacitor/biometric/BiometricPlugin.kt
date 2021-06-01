@@ -7,34 +7,33 @@ import android.os.Build
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import android.util.Base64
+import androidx.activity.result.ActivityResult
 import androidx.annotation.RequiresApi
 import androidx.biometric.BiometricManager
-import com.getcapacitor.*
-import com.queelag.capacitor.biometric.definitions.ActivityCode.ACTIVITY_CODE_PROMPT
-import com.queelag.capacitor.biometric.definitions.ActivityCode.ACTIVITY_CODE_PROMPT_DECRYPT
-import com.queelag.capacitor.biometric.definitions.ActivityCode.ACTIVITY_CODE_PROMPT_ENCRYPT
+import com.getcapacitor.JSObject
+import com.getcapacitor.Plugin
+import com.getcapacitor.PluginCall
+import com.getcapacitor.PluginMethod
+import com.getcapacitor.annotation.ActivityCallback
+import com.getcapacitor.annotation.CapacitorPlugin
+import com.queelag.capacitor.biometric.definitions.ActivityCode
 import com.queelag.capacitor.biometric.definitions.BiometricPromptCallbackStatus
 import com.queelag.capacitor.biometric.definitions.BiometricPromptCallbackType
-import com.queelag.capacitor.biometric.definitions.Core.ASYMMETRIC_KEYS_ALIAS
-import com.queelag.capacitor.biometric.definitions.Core.KEYSTORE_PROVIDER
-import com.queelag.capacitor.biometric.definitions.Core.KEYSTORE_TYPE
-import com.queelag.capacitor.biometric.definitions.Core.SHARED_PREFERENCES
-import com.queelag.capacitor.biometric.definitions.Core.SYMMETRIC_KEY_ALIAS
-import com.queelag.capacitor.biometric.definitions.Core.SYMMETRIC_KEY_SIZE
+import com.queelag.capacitor.biometric.definitions.Core
 import java.security.KeyPairGenerator
 import java.security.KeyStore
 import javax.crypto.KeyGenerator
 
 @RequiresApi(Build.VERSION_CODES.P)
-@NativePlugin(requestCodes = [ACTIVITY_CODE_PROMPT, ACTIVITY_CODE_PROMPT_DECRYPT, ACTIVITY_CODE_PROMPT_ENCRYPT])
-class Biometric : Plugin() {
+@CapacitorPlugin(name = "Biometric")
+class BiometricPlugin : Plugin() {
     override fun load() {
         super.load()
 
-        if (!this.keyStore.containsAlias(ASYMMETRIC_KEYS_ALIAS)) {
+        if (!this.keyStore.containsAlias(Core.ASYMMETRIC_KEYS_ALIAS)) {
             this.createAsymmetricKeys()
         }
-        if (!this.keyStore.containsAlias(SYMMETRIC_KEY_ALIAS)) {
+        if (!this.keyStore.containsAlias(Core.SYMMETRIC_KEY_ALIAS)) {
             this.createSymmetricKey()
         }
     }
@@ -61,7 +60,7 @@ class Biometric : Plugin() {
 
     @PluginMethod
     fun prompt(call: PluginCall) {
-        this.startPromptActivityForResult(call, ACTIVITY_CODE_PROMPT)
+        this.startPromptActivityForResult(call, ActivityCode.ACTIVITY_CODE_PROMPT)
     }
 
     @PluginMethod
@@ -82,24 +81,24 @@ class Biometric : Plugin() {
 
     @PluginMethod
     fun deleteAsymmetricKeys(call: PluginCall) {
-        this.deleteEntryFromKeyStore(ASYMMETRIC_KEYS_ALIAS)
+        this.deleteEntryFromKeyStore(Core.ASYMMETRIC_KEYS_ALIAS)
         call.resolve()
     }
 
     @PluginMethod
     fun deleteSymmetricKey(call: PluginCall) {
-        this.deleteEntryFromKeyStore(SYMMETRIC_KEY_ALIAS)
+        this.deleteEntryFromKeyStore(Core.SYMMETRIC_KEY_ALIAS)
         call.resolve()
     }
 
     @PluginMethod
     fun writeData(call: PluginCall) {
-        this.startPromptActivityForResult(call, ACTIVITY_CODE_PROMPT_ENCRYPT)
+        this.startPromptActivityForResult(call, ActivityCode.ACTIVITY_CODE_PROMPT_ENCRYPT)
     }
 
     @PluginMethod
     fun readData(call: PluginCall) {
-        this.startPromptActivityForResult(call, ACTIVITY_CODE_PROMPT_DECRYPT)
+        this.startPromptActivityForResult(call, ActivityCode.ACTIVITY_CODE_PROMPT_DECRYPT)
     }
 
     @PluginMethod
@@ -110,44 +109,46 @@ class Biometric : Plugin() {
 
     @PluginMethod
     fun areAsymmetricKeysCreated(call: PluginCall) {
-        call.resolve(JSObject().put("value", keyStore.containsAlias(ASYMMETRIC_KEYS_ALIAS)))
+        call.resolve(JSObject().put("value", keyStore.containsAlias(Core.ASYMMETRIC_KEYS_ALIAS)))
     }
 
     @PluginMethod
     fun isSymmetricKeyCreated(call: PluginCall) {
-        call.resolve(JSObject().put("value", keyStore.containsAlias(SYMMETRIC_KEY_ALIAS)))
+        call.resolve(JSObject().put("value", keyStore.containsAlias(Core.SYMMETRIC_KEY_ALIAS)))
     }
 
-    override fun handleOnActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.handleOnActivityResult(requestCode, resultCode, data)
+    @ActivityCallback
+    private fun onPromptResult(call: PluginCall, result: ActivityResult) {
+        val data = result.data ?: return
 
-        val call = savedCall ?: return
-        val status = data?.getSerializableExtra("status") ?: return
+        when (data.getSerializableExtra("status")) {
+            BiometricPromptCallbackStatus.ERROR -> this.rejectBiometricPromptCallbackError(data, call)
+            BiometricPromptCallbackStatus.FAILED -> call.reject(BiometricPromptCallbackStatus.FAILED.name)
+            BiometricPromptCallbackStatus.SUCCESS -> call.resolve()
+        }
+    }
 
-        when (requestCode) {
-            ACTIVITY_CODE_PROMPT -> {
-                when (status) {
-                    BiometricPromptCallbackStatus.ERROR -> this.rejectBiometricPromptCallbackError(data, call)
-                    BiometricPromptCallbackStatus.FAILED -> call.reject(BiometricPromptCallbackStatus.FAILED.name)
-                    BiometricPromptCallbackStatus.SUCCESS -> call.resolve()
-                }
-            }
-            ACTIVITY_CODE_PROMPT_DECRYPT -> {
-                when (status) {
-                    BiometricPromptCallbackStatus.ERROR -> this.rejectBiometricPromptCallbackError(data, call)
-                    BiometricPromptCallbackStatus.FAILED -> call.reject(BiometricPromptCallbackStatus.FAILED.name)
-                    BiometricPromptCallbackStatus.SUCCESS -> call.resolve(JSObject().put("value", data.getStringExtra("decrypted")))
-                }
-            }
-            ACTIVITY_CODE_PROMPT_ENCRYPT -> {
-                when (status) {
-                    BiometricPromptCallbackStatus.ERROR -> this.rejectBiometricPromptCallbackError(data, call)
-                    BiometricPromptCallbackStatus.FAILED -> call.reject(BiometricPromptCallbackStatus.FAILED.name)
-                    BiometricPromptCallbackStatus.SUCCESS -> {
-                        this.sharedPreferencesEditor.putString(call.getString("key"), data.getStringExtra("encrypted")).apply()
-                        call.resolve()
-                    }
-                }
+    @ActivityCallback
+    private fun onPromptDecryptResult(call: PluginCall, result: ActivityResult) {
+        val data = result.data ?: return
+
+        when (data.getSerializableExtra("status")) {
+            BiometricPromptCallbackStatus.ERROR -> this.rejectBiometricPromptCallbackError(data, call)
+            BiometricPromptCallbackStatus.FAILED -> call.reject(BiometricPromptCallbackStatus.FAILED.name)
+            BiometricPromptCallbackStatus.SUCCESS -> call.resolve(JSObject().put("value", data.getStringExtra("decrypted")))
+        }
+    }
+
+    @ActivityCallback
+    private fun onPromptEncryptResult(call: PluginCall, result: ActivityResult) {
+        val data = result.data ?: return
+
+        when (data.getSerializableExtra("status")) {
+            BiometricPromptCallbackStatus.ERROR -> this.rejectBiometricPromptCallbackError(data, call)
+            BiometricPromptCallbackStatus.FAILED -> call.reject(BiometricPromptCallbackStatus.FAILED.name)
+            BiometricPromptCallbackStatus.SUCCESS -> {
+                this.sharedPreferencesEditor.putString(call.getString("key"), data.getStringExtra("encrypted")).apply()
+                call.resolve()
             }
         }
     }
@@ -162,29 +163,31 @@ class Biometric : Plugin() {
         intent.putExtra("title", call.getString("title", "Authenticate"))
 
         when (code) {
-            ACTIVITY_CODE_PROMPT -> intent.putExtra("type", BiometricPromptCallbackType.ANY)
-            ACTIVITY_CODE_PROMPT_DECRYPT -> {
+            ActivityCode.ACTIVITY_CODE_PROMPT -> {
+                intent.putExtra("type", BiometricPromptCallbackType.ANY)
+                startActivityForResult(call, intent, "onPromptResult")
+            }
+            ActivityCode.ACTIVITY_CODE_PROMPT_DECRYPT -> {
                 intent.putExtra("encrypted", this.sharedPreferences.getString(call.getString("key"), ""))
                 intent.putExtra("type", BiometricPromptCallbackType.DECRYPT)
+                startActivityForResult(call, intent, "onPromptDecryptResult")
             }
-            ACTIVITY_CODE_PROMPT_ENCRYPT -> {
+            ActivityCode.ACTIVITY_CODE_PROMPT_ENCRYPT -> {
                 intent.putExtra("decrypted", call.getString("value"))
                 intent.putExtra("type", BiometricPromptCallbackType.ENCRYPT)
+                startActivityForResult(call, intent, "onPromptEncryptResult")
             }
         }
-
-        saveCall(call)
-        startActivityForResult(call, intent, code)
     }
 
     private fun createAsymmetricKeys(): String {
         kotlin.runCatching {
-            if (this.keyStore.containsAlias(ASYMMETRIC_KEYS_ALIAS)) {
-                this.keyStore.deleteEntry(ASYMMETRIC_KEYS_ALIAS)
+            if (this.keyStore.containsAlias(Core.ASYMMETRIC_KEYS_ALIAS)) {
+                this.keyStore.deleteEntry(Core.ASYMMETRIC_KEYS_ALIAS)
             }
 
-            val keyPairGenerator = KeyPairGenerator.getInstance(KeyProperties.KEY_ALGORITHM_EC, KEYSTORE_PROVIDER)
-            val keyGenParameterSpec = KeyGenParameterSpec.Builder(ASYMMETRIC_KEYS_ALIAS, KeyProperties.PURPOSE_SIGN or KeyProperties.PURPOSE_VERIFY)
+            val keyPairGenerator = KeyPairGenerator.getInstance(KeyProperties.KEY_ALGORITHM_EC, Core.KEYSTORE_PROVIDER)
+            val keyGenParameterSpec = KeyGenParameterSpec.Builder(Core.ASYMMETRIC_KEYS_ALIAS, KeyProperties.PURPOSE_SIGN or KeyProperties.PURPOSE_VERIFY)
                     .setDigests(KeyProperties.DIGEST_SHA256, KeyProperties.DIGEST_SHA512)
                     .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_RSA_OAEP)
                     .setInvalidatedByBiometricEnrollment(true)
@@ -206,17 +209,17 @@ class Biometric : Plugin() {
 
     private fun createSymmetricKey() {
         kotlin.runCatching {
-            if (this.keyStore.containsAlias(SYMMETRIC_KEY_ALIAS)) {
-                this.keyStore.deleteEntry(SYMMETRIC_KEY_ALIAS)
+            if (this.keyStore.containsAlias(Core.SYMMETRIC_KEY_ALIAS)) {
+                this.keyStore.deleteEntry(Core.SYMMETRIC_KEY_ALIAS)
             }
 
-            val keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, KEYSTORE_PROVIDER)
-            val keyGenParameterSpec = KeyGenParameterSpec.Builder(SYMMETRIC_KEY_ALIAS, KeyProperties.PURPOSE_DECRYPT or KeyProperties.PURPOSE_ENCRYPT)
+            val keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, Core.KEYSTORE_PROVIDER)
+            val keyGenParameterSpec = KeyGenParameterSpec.Builder(Core.SYMMETRIC_KEY_ALIAS, KeyProperties.PURPOSE_DECRYPT or KeyProperties.PURPOSE_ENCRYPT)
                     .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
                     .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
                     .setInvalidatedByBiometricEnrollment(true)
 //                .setIsStrongBoxBacked(true)
-                    .setKeySize(SYMMETRIC_KEY_SIZE)
+                    .setKeySize(Core.SYMMETRIC_KEY_SIZE)
                     .setRandomizedEncryptionRequired(true)
                     .setUnlockedDeviceRequired(true)
                     .setUserAuthenticationRequired(true)
@@ -230,7 +233,7 @@ class Biometric : Plugin() {
 
     private fun readPublicKey(): String {
         kotlin.runCatching {
-            Base64.encodeToString(this.keyStore.getCertificate(ASYMMETRIC_KEYS_ALIAS).publicKey.encoded, Base64.NO_WRAP)
+            Base64.encodeToString(this.keyStore.getCertificate(Core.ASYMMETRIC_KEYS_ALIAS).publicKey.encoded, Base64.NO_WRAP)
         }.onFailure { e -> e.printStackTrace() }
 
         return ""
@@ -249,14 +252,14 @@ class Biometric : Plugin() {
 
     private val keyStore: KeyStore
         get() {
-            val keyStore = KeyStore.getInstance(KEYSTORE_TYPE)
+            val keyStore = KeyStore.getInstance(Core.KEYSTORE_TYPE)
             keyStore.load(null)
             return keyStore
         }
 
     private val sharedPreferences: SharedPreferences
         get() {
-            return context.getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE)
+            return context.getSharedPreferences(Core.SHARED_PREFERENCES, Context.MODE_PRIVATE)
         }
 
     private val sharedPreferencesEditor: SharedPreferences.Editor

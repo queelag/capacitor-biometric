@@ -1,9 +1,3 @@
-declare module '@capacitor/core' {
-  interface PluginRegistry {
-    Biometric: BiometricPlugin;
-  }
-}
-
 export interface Response<T> {
   value: T;
 }

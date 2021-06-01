@@ -5,13 +5,14 @@ import Capacitor
  * Please read the Capacitor iOS Plugin Development Guide
  * here: https://capacitorjs.com/docs/plugins/ios
  */
-@objc(Biometric)
-public class Biometric: CAPPlugin {
+@objc(BiometricPlugin)
+public class BiometricPlugin: CAPPlugin {
+    private let implementation = Biometric()
 
     @objc func echo(_ call: CAPPluginCall) {
         let value = call.getString("value") ?? ""
-        call.success([
-            "value": value
+        call.resolve([
+            "value": implementation.echo(value)
         ])
     }
 }
