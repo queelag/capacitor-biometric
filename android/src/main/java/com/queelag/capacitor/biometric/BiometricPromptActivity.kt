@@ -8,6 +8,7 @@ import android.util.Base64
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricPrompt
+import androidx.core.content.ContextCompat
 import com.queelag.capacitor.biometric.definitions.BiometricPromptCallbackStatus
 import com.queelag.capacitor.biometric.definitions.BiometricPromptCallbackType
 import com.queelag.capacitor.biometric.definitions.Core.AUTHENTICATION_TAG_LENGTH
@@ -25,7 +26,7 @@ import javax.crypto.spec.GCMParameterSpec
 class BiometricPromptActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        this.authorize(BiometricPrompt(this, mainExecutor, BiometricPromptCallback(this)))
+        this.authorize(BiometricPrompt(this, ContextCompat.getMainExecutor(this), BiometricPromptCallback(this)))
     }
 
     private fun authorize(prompt: BiometricPrompt) {
