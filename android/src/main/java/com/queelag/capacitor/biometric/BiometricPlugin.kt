@@ -108,6 +108,11 @@ class BiometricPlugin : Plugin() {
     }
 
     @PluginMethod
+    fun hasData(call: PluginCall) {
+        call.resolve(JSObject().put("value", this.sharedPreferences.contains(call.getString("key"))))
+    }
+
+    @PluginMethod
     fun areAsymmetricKeysCreated(call: PluginCall) {
         call.resolve(JSObject().put("value", keyStore.containsAlias(Core.ASYMMETRIC_KEYS_ALIAS)))
     }

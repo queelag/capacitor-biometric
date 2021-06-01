@@ -23,6 +23,7 @@ npx cap sync
 * [`writeData(...)`](#writedata)
 * [`readData(...)`](#readdata)
 * [`deleteData(...)`](#deletedata)
+* [`hasData(...)`](#hasdata)
 * [`areAsymmetricKeysCreated()`](#areasymmetrickeyscreated)
 * [`isSymmetricKeyCreated()`](#issymmetrickeycreated)
 * [Interfaces](#interfaces)
@@ -158,6 +159,21 @@ deleteData({}: DeleteDataBody) => any
 --------------------
 
 
+### hasData(...)
+
+```typescript
+hasData({}: HasDataBody) => any
+```
+
+| Param     | Type                                                |
+| --------- | --------------------------------------------------- |
+| **`__0`** | <code><a href="#hasdatabody">HasDataBody</a></code> |
+
+**Returns:** <code>any</code>
+
+--------------------
+
+
 ### areAsymmetricKeysCreated()
 
 ```typescript
@@ -224,6 +240,13 @@ isSymmetricKeyCreated() => any
 
 
 #### DeleteDataBody
+
+| Prop      | Type                |
+| --------- | ------------------- |
+| **`key`** | <code>string</code> |
+
+
+#### HasDataBody
 
 | Prop      | Type                |
 | --------- | ------------------- |

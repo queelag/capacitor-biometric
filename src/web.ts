@@ -4,6 +4,7 @@ import {
   BiometricPluginPromptBody,
   CreateAsymmetricKeysResponse,
   DeleteDataBody,
+  HasDataBody,
   ReadDataBody,
   Response,
   WriteDataBody,
@@ -47,6 +48,10 @@ export class BiometricWeb extends WebPlugin implements BiometricPlugin {
   }
 
   async deleteData({}: DeleteDataBody): Promise<void> {
+    throw new Error();
+  }
+
+  async hasData({}: HasDataBody): Promise<Response<boolean>> {
     throw new Error();
   }
 

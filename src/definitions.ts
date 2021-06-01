@@ -27,6 +27,10 @@ export interface DeleteDataBody {
   key: string;
 }
 
+export interface HasDataBody {
+  key: string;
+}
+
 export interface BiometricPlugin {
   isAvailable(): Promise<void>;
   prompt({}: BiometricPluginPromptBody): Promise<void>;
@@ -38,6 +42,7 @@ export interface BiometricPlugin {
   writeData({}: WriteDataBody): Promise<void>;
   readData({}: ReadDataBody): Promise<Response<string>>;
   deleteData({}: DeleteDataBody): Promise<void>;
+  hasData({}: HasDataBody): Promise<Response<boolean>>;
   areAsymmetricKeysCreated(): Promise<Response<boolean>>;
   isSymmetricKeyCreated(): Promise<Response<boolean>>;
 }
