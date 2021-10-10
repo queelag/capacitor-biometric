@@ -1,48 +1,17 @@
 {
-  "name": "@queelag/capacitor-biometric",
-  "version": "0.0.1",
-  "description": "Secure biometric implementation with asymmetric encryption capabilities.",
-  "main": "dist/plugin.cjs.js",
-  "module": "dist/esm/index.js",
-  "types": "dist/esm/index.d.ts",
-  "unpkg": "dist/plugin.js",
-  "files": [
-    "android/src/main/",
-    "android/build.gradle",
-    "dist/",
-    "ios/Plugin/",
-    "QueelagCapacitorBiometric.podspec"
-  ],
   "author": "Dario Sechi",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/queelag/capacitor-biometric.git"
-  },
   "bugs": {
     "url": "https://github.com/queelag/capacitor-biometric/issues"
   },
-  "keywords": [
-    "capacitor",
-    "plugin",
-    "native"
-  ],
-  "scripts": {
-    "verify": "npm run verify:ios && npm run verify:android && npm run verify:web",
-    "verify:ios": "cd ios && pod install && xcodebuild -workspace Plugin.xcworkspace -scheme Plugin && cd ..",
-    "verify:android": "cd android && ./gradlew clean build test && cd ..",
-    "verify:web": "npm run build",
-    "lint": "npm run eslint && npm run prettier -- --check && npm run swiftlint -- lint",
-    "fmt": "npm run eslint -- --fix && npm run prettier -- --write && npm run swiftlint -- autocorrect --format",
-    "eslint": "eslint . --ext ts",
-    "prettier": "prettier \"**/*.{css,html,ts,js,java}\"",
-    "swiftlint": "node-swiftlint",
-    "docgen": "docgen --api BiometricPlugin --output-readme README.md --output-json dist/docs.json",
-    "build": "npm run clean && npm run docgen && tsc && rollup -c rollup.config.js",
-    "clean": "rimraf ./dist",
-    "watch": "tsc --watch",
-    "prepublishOnly": "npm run build"
+  "capacitor": {
+    "android": {
+      "src": "android"
+    },
+    "ios": {
+      "src": "ios"
+    }
   },
+  "description": "Secure biometric implementation with asymmetric encryption capabilities.",
   "devDependencies": {
     "@capacitor/android": "next",
     "@capacitor/core": "next",
@@ -59,20 +28,54 @@
     "swiftlint": "^1.0.1",
     "typescript": "~4.0.3"
   },
+  "eslintConfig": {
+    "extends": "@ionic/eslint-config/recommended"
+  },
+  "files": [
+    "android/src/main/",
+    "android/build.gradle",
+    "dist/",
+    "ios/Plugin/",
+    "QueelagCapacitorBiometric.podspec"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "capacitor",
+    "plugin",
+    "native"
+  ],
+  "main": "dist/plugin.cjs.js",
+  "module": "dist/esm/index.js",
+  "name": "@queelag/capacitor-biometric",
   "peerDependencies": {
     "@capacitor/core": "next"
   },
   "prettier": "@ionic/prettier-config",
-  "swiftlint": "@ionic/swiftlint-config",
-  "eslintConfig": {
-    "extends": "@ionic/eslint-config/recommended"
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
   },
-  "capacitor": {
-    "ios": {
-      "src": "ios"
-    },
-    "android": {
-      "src": "android"
-    }
-  }
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/queelag/capacitor-biometric.git"
+  },
+  "scripts": {
+    "verify": "npm run verify:ios && npm run verify:android && npm run verify:web",
+    "verify:ios": "cd ios && pod install && xcodebuild -workspace Plugin.xcworkspace -scheme Plugin && cd ..",
+    "verify:android": "cd android && ./gradlew clean build test && cd ..",
+    "verify:web": "npm run build",
+    "lint": "npm run eslint && npm run prettier -- --check && npm run swiftlint -- lint",
+    "fmt": "npm run eslint -- --fix && npm run prettier -- --write && npm run swiftlint -- autocorrect --format",
+    "eslint": "eslint . --ext ts",
+    "prettier": "prettier \"**/*.{css,html,ts,js,java}\"",
+    "swiftlint": "node-swiftlint",
+    "docgen": "docgen --api BiometricPlugin --output-readme README.md --output-json dist/docs.json",
+    "build": "npm run clean && npm run docgen && tsc && rollup -c rollup.config.js",
+    "clean": "rimraf ./dist",
+    "watch": "tsc --watch",
+    "prepublishOnly": "npm run build"
+  },
+  "swiftlint": "@ionic/swiftlint-config",
+  "types": "dist/esm/index.d.ts",
+  "unpkg": "dist/plugin.js",
+  "version": "0.0.1"
 }
