@@ -24,7 +24,7 @@ import java.security.KeyPairGenerator
 import java.security.KeyStore
 import javax.crypto.KeyGenerator
 
-@RequiresApi(Build.VERSION_CODES.P)
+@RequiresApi(Build.VERSION_CODES.R)
 @CapacitorPlugin(name = "Biometric")
 class BiometricPlugin : Plugin() {
     override fun load() {
@@ -199,8 +199,8 @@ class BiometricPlugin : Plugin() {
 //                .setIsStrongBoxBacked(true)
                     .setRandomizedEncryptionRequired(true)
                     .setUnlockedDeviceRequired(true)
+                    .setUserAuthenticationParameters(0, KeyProperties.AUTH_BIOMETRIC_STRONG)
                     .setUserAuthenticationRequired(true)
-                    .setUserAuthenticationValidityDurationSeconds(-1)
                     .build()
 
             keyPairGenerator.initialize(keyGenParameterSpec)
@@ -227,8 +227,8 @@ class BiometricPlugin : Plugin() {
                     .setKeySize(Core.SYMMETRIC_KEY_SIZE)
                     .setRandomizedEncryptionRequired(true)
                     .setUnlockedDeviceRequired(true)
+                    .setUserAuthenticationParameters(0, KeyProperties.AUTH_BIOMETRIC_STRONG)
                     .setUserAuthenticationRequired(true)
-                    .setUserAuthenticationValidityDurationSeconds(-1)
                     .build()
 
             keyGenerator.init(keyGenParameterSpec)
