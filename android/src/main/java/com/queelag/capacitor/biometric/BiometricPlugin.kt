@@ -29,13 +29,6 @@ import javax.crypto.KeyGenerator
 class BiometricPlugin : Plugin() {
     override fun load() {
         super.load()
-
-        if (!this.keyStore.containsAlias(Core.ASYMMETRIC_KEYS_ALIAS)) {
-            this.createAsymmetricKeys()
-        }
-        if (!this.keyStore.containsAlias(Core.SYMMETRIC_KEY_ALIAS)) {
-            this.createSymmetricKey()
-        }
     }
 
     @PluginMethod
@@ -196,10 +189,9 @@ class BiometricPlugin : Plugin() {
                     .setDigests(KeyProperties.DIGEST_SHA256, KeyProperties.DIGEST_SHA512)
                     .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_RSA_OAEP)
                     .setInvalidatedByBiometricEnrollment(true)
-//                .setIsStrongBoxBacked(true)
                     .setRandomizedEncryptionRequired(true)
                     .setUnlockedDeviceRequired(true)
-                    .setUserAuthenticationParameters(0, KeyProperties.AUTH_BIOMETRIC_STRONG)
+                    .setUserAuthenticationParameters(Core.ASYMMETRIC_USER_AUTHENTICATION_TIMEOUT, KeyProperties.AUTH_BIOMETRIC_STRONG)
                     .setUserAuthenticationRequired(true)
                     .build()
 
@@ -223,11 +215,10 @@ class BiometricPlugin : Plugin() {
                     .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
                     .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
                     .setInvalidatedByBiometricEnrollment(true)
-//                .setIsStrongBoxBacked(true)
                     .setKeySize(Core.SYMMETRIC_KEY_SIZE)
                     .setRandomizedEncryptionRequired(true)
                     .setUnlockedDeviceRequired(true)
-                    .setUserAuthenticationParameters(0, KeyProperties.AUTH_BIOMETRIC_STRONG)
+                    .setUserAuthenticationParameters(Core.SYMMETRIC_KEY_USER_AUTHENTICATION_TIMEOUT, KeyProperties.AUTH_BIOMETRIC_STRONG)
                     .setUserAuthenticationRequired(true)
                     .build()
 
