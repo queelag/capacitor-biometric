@@ -7,8 +7,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricPrompt
 import com.queelag.capacitor.biometric.definitions.BiometricPromptCallbackStatus
 import com.queelag.capacitor.biometric.definitions.BiometricPromptCallbackType
+import com.queelag.capacitor.biometric.definitions.Core
 import com.queelag.capacitor.biometric.definitions.Core.IV_SEPARATOR
+import java.security.Key
+import java.security.KeyStore
 import javax.crypto.Cipher
+import javax.crypto.spec.GCMParameterSpec
 
 class BiometricPromptCallback(private val activity: AppCompatActivity) : BiometricPrompt.AuthenticationCallback() {
     override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
@@ -32,10 +36,10 @@ class BiometricPromptCallback(private val activity: AppCompatActivity) : Biometr
             when (this.type) {
                 BiometricPromptCallbackType.ANY -> intent.putExtra("status", BiometricPromptCallbackStatus.SUCCESS)
                 BiometricPromptCallbackType.DECRYPT -> intent
-                        .putExtra("decrypted", this.decrypt(encrypted, result.cryptoObject!!.cipher!!))
+                        .putExtra("decrypted", this.decrypt(encrypted, this.cipherSymmetricDecryptMode))
                         .putExtra("status", BiometricPromptCallbackStatus.SUCCESS)
                 BiometricPromptCallbackType.ENCRYPT -> intent
-                        .putExtra("encrypted", this.encrypt(decrypted, result.cryptoObject!!.cipher!!))
+                        .putExtra("encrypted", this.encrypt(decrypted, this.cipherSymmetricEncryptMode))
                         .putExtra("status", BiometricPromptCallbackStatus.SUCCESS)
             }
         }.onFailure { e ->
@@ -65,6 +69,20 @@ class BiometricPromptCallback(private val activity: AppCompatActivity) : Biometr
         return Base64.encodeToString(cipher.doFinal(Base64.decode(decrypted, Base64.NO_WRAP)), Base64.NO_WRAP) + IV_SEPARATOR + Base64.encodeToString(cipher.iv, Base64.NO_WRAP)
     }
 
+    private val cipherSymmetricDecryptMode: Cipher
+        get() {
+            val cipher = Cipher.getInstance(Core.SYMMETRIC_KEY_TRANSFORMATION)
+            cipher.init(Cipher.DECRYPT_MODE, this.symmetricKey, GCMParameterSpec(Core.AUTHENTICATION_TAG_LENGTH, this.iv))
+            return cipher
+        }
+
+    private val cipherSymmetricEncryptMode: Cipher
+        get() {
+            val cipher = Cipher.getInstance(Core.SYMMETRIC_KEY_TRANSFORMATION)
+            cipher.init(Cipher.ENCRYPT_MODE, this.symmetricKey)
+            return cipher
+        }
+
     private val decrypted: String
         get() {
             return activity.intent.getStringExtra("decrypted") as String
@@ -73,6 +91,23 @@ class BiometricPromptCallback(private val activity: AppCompatActivity) : Biometr
     private val encrypted: String
         get() {
             return activity.intent.getStringExtra("encrypted") as String
+        }
+
+    private val iv: ByteArray
+        get() {
+            return Base64.decode(this.encrypted.replace(Regex("^.+${IV_SEPARATOR}"), ""), Base64.NO_WRAP)
+        }
+
+    private val keyStore: KeyStore
+        get() {
+            val keyStore = KeyStore.getInstance(Core.KEYSTORE_TYPE)
+            keyStore.load(null)
+            return keyStore
+        }
+
+    private val symmetricKey: Key
+        get() {
+            return this.keyStore.getKey(Core.SYMMETRIC_KEY_ALIAS, null)
         }
 
     private val type: BiometricPromptCallbackType

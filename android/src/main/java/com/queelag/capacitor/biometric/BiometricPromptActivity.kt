@@ -33,8 +33,8 @@ class BiometricPromptActivity : AppCompatActivity() {
         kotlin.runCatching {
             when (this.type) {
                 BiometricPromptCallbackType.ANY -> prompt.authenticate(this.buildPromptInfo())
-                BiometricPromptCallbackType.DECRYPT -> prompt.authenticate(this.buildPromptInfo(), BiometricPrompt.CryptoObject(this.cipherSymmetricDecryptMode))
-                BiometricPromptCallbackType.ENCRYPT -> prompt.authenticate(this.buildPromptInfo(), BiometricPrompt.CryptoObject(this.cipherSymmetricEncryptMode))
+                BiometricPromptCallbackType.DECRYPT -> prompt.authenticate(this.buildPromptInfo())
+                BiometricPromptCallbackType.ENCRYPT -> prompt.authenticate(this.buildPromptInfo())
             }
         }.onFailure { e ->
             e.printStackTrace()
@@ -58,42 +58,6 @@ class BiometricPromptActivity : AppCompatActivity() {
                 .setTitle(if (intent.hasExtra("title")) intent.getStringExtra("title").orEmpty() else "Authenticate")
                 .build()
     }
-
-    private val cipherSymmetricDecryptMode: Cipher
-        get() {
-            val cipher = Cipher.getInstance(SYMMETRIC_KEY_TRANSFORMATION)
-            cipher.init(Cipher.DECRYPT_MODE, this.symmetricKey, GCMParameterSpec(AUTHENTICATION_TAG_LENGTH, this.iv))
-            return cipher
-        }
-
-    private val cipherSymmetricEncryptMode: Cipher
-        get() {
-            val cipher = Cipher.getInstance(SYMMETRIC_KEY_TRANSFORMATION)
-            cipher.init(Cipher.ENCRYPT_MODE, this.symmetricKey)
-            return cipher
-        }
-
-    private val encrypted: String
-        get() {
-            return intent.getStringExtra("encrypted") as String
-        }
-
-    private val iv: ByteArray
-        get() {
-            return Base64.decode(this.encrypted.replace(Regex("^.+${IV_SEPARATOR}"), ""), Base64.NO_WRAP)
-        }
-
-    private val keyStore: KeyStore
-        get() {
-            val keyStore = KeyStore.getInstance(KEYSTORE_TYPE)
-            keyStore.load(null)
-            return keyStore
-        }
-
-    private val symmetricKey: Key
-        get() {
-            return this.keyStore.getKey(SYMMETRIC_KEY_ALIAS, null)
-        }
 
     private val type: BiometricPromptCallbackType
         get() {

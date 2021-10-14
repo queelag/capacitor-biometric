@@ -27,10 +27,6 @@ import javax.crypto.KeyGenerator
 @RequiresApi(Build.VERSION_CODES.R)
 @CapacitorPlugin(name = "Biometric")
 class BiometricPlugin : Plugin() {
-    override fun load() {
-        super.load()
-    }
-
     @PluginMethod
     fun isAvailable(call: PluginCall) {
         when (BiometricManager.from(context).canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG)) {
