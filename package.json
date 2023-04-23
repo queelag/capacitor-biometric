@@ -1,7 +1,7 @@
 {
   "author": "Dario Sechi",
   "bugs": {
-    "url": "https://github.com/queelag/capacitor-biometric/issues"
+    "url": "https://github.com/aracna/capacitor-biometric/issues"
   },
   "capacitor": {
     "android": {
@@ -36,7 +36,7 @@
     "android/build.gradle",
     "dist/",
     "ios/Plugin/",
-    "QueelagCapacitorBiometric.podspec"
+    "AracnaCapacitorBiometric.podspec"
   ],
   "license": "MIT",
   "keywords": [
@@ -46,7 +46,7 @@
   ],
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
-  "name": "@queelag/capacitor-biometric",
+  "name": "@aracna/capacitor-biometric",
   "peerDependencies": {
     "@capacitor/core": "next"
   },
@@ -56,7 +56,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/queelag/capacitor-biometric.git"
+    "url": "git+https://github.com/aracna/capacitor-biometric.git"
   },
   "scripts": {
     "verify": "npm run verify:ios && npm run verify:android && npm run verify:web",

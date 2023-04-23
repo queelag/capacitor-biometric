@@ -1,4 +1,4 @@
-package com.queelag.capacitor.biometric.definitions
+package com.aracna.capacitor.biometric.definitions
 
 enum class BiometricPromptCallbackStatus {
     ERROR,

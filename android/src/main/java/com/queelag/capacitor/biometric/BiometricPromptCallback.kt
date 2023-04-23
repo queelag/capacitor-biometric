@@ -1,14 +1,14 @@
-package com.queelag.capacitor.biometric
+package com.aracna.capacitor.biometric
 
 import android.app.Activity
 import android.content.Intent
 import android.util.Base64
 import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricPrompt
-import com.queelag.capacitor.biometric.definitions.BiometricPromptCallbackStatus
-import com.queelag.capacitor.biometric.definitions.BiometricPromptCallbackType
-import com.queelag.capacitor.biometric.definitions.Core
-import com.queelag.capacitor.biometric.definitions.Core.IV_SEPARATOR
+import com.aracna.capacitor.biometric.definitions.BiometricPromptCallbackStatus
+import com.aracna.capacitor.biometric.definitions.BiometricPromptCallbackType
+import com.aracna.capacitor.biometric.definitions.Core
+import com.aracna.capacitor.biometric.definitions.Core.IV_SEPARATOR
 import java.security.Key
 import java.security.KeyStore
 import javax.crypto.Cipher

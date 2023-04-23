@@ -1,4 +1,4 @@
-package com.queelag.capacitor.biometric
+package com.aracna.capacitor.biometric
 
 import android.app.Activity
 import android.content.Intent
@@ -9,13 +9,13 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
-import com.queelag.capacitor.biometric.definitions.BiometricPromptCallbackStatus
-import com.queelag.capacitor.biometric.definitions.BiometricPromptCallbackType
-import com.queelag.capacitor.biometric.definitions.Core.AUTHENTICATION_TAG_LENGTH
-import com.queelag.capacitor.biometric.definitions.Core.IV_SEPARATOR
-import com.queelag.capacitor.biometric.definitions.Core.KEYSTORE_TYPE
-import com.queelag.capacitor.biometric.definitions.Core.SYMMETRIC_KEY_ALIAS
-import com.queelag.capacitor.biometric.definitions.Core.SYMMETRIC_KEY_TRANSFORMATION
+import com.aracna.capacitor.biometric.definitions.BiometricPromptCallbackStatus
+import com.aracna.capacitor.biometric.definitions.BiometricPromptCallbackType
+import com.aracna.capacitor.biometric.definitions.Core.AUTHENTICATION_TAG_LENGTH
+import com.aracna.capacitor.biometric.definitions.Core.IV_SEPARATOR
+import com.aracna.capacitor.biometric.definitions.Core.KEYSTORE_TYPE
+import com.aracna.capacitor.biometric.definitions.Core.SYMMETRIC_KEY_ALIAS
+import com.aracna.capacitor.biometric.definitions.Core.SYMMETRIC_KEY_TRANSFORMATION
 import java.security.Key
 import java.security.KeyStore
 import javax.crypto.Cipher

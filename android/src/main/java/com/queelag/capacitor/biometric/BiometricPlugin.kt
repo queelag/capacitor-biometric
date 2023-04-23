@@ -1,4 +1,4 @@
-package com.queelag.capacitor.biometric
+package com.aracna.capacitor.biometric
 
 import android.content.Context
 import android.content.Intent
@@ -16,10 +16,10 @@ import com.getcapacitor.PluginCall
 import com.getcapacitor.PluginMethod
 import com.getcapacitor.annotation.ActivityCallback
 import com.getcapacitor.annotation.CapacitorPlugin
-import com.queelag.capacitor.biometric.definitions.ActivityCode
-import com.queelag.capacitor.biometric.definitions.BiometricPromptCallbackStatus
-import com.queelag.capacitor.biometric.definitions.BiometricPromptCallbackType
-import com.queelag.capacitor.biometric.definitions.Core
+import com.aracna.capacitor.biometric.definitions.ActivityCode
+import com.aracna.capacitor.biometric.definitions.BiometricPromptCallbackStatus
+import com.aracna.capacitor.biometric.definitions.BiometricPromptCallbackType
+import com.aracna.capacitor.biometric.definitions.Core
 import java.security.KeyPairGenerator
 import java.security.KeyStore
 import javax.crypto.KeyGenerator

@@ -1,11 +1,11 @@
-# @queelag/capacitor-biometric
+# @aracna/capacitor-biometric
 
 Secure biometric implementation with asymmetric encryption capabilities.
 
 ## Install
 
 ```bash
-npm install @queelag/capacitor-biometric
+npm install @aracna/capacitor-biometric
 npx cap sync
 ```
 
