@@ -36,10 +36,8 @@ npx cap sync
 ### isAvailable()
 
 ```typescript
-isAvailable() => any
+isAvailable() => Promise<void>
 ```
-
-**Returns:** <code>any</code>
 
 --------------------
 
@@ -47,14 +45,12 @@ isAvailable() => any
 ### prompt(...)
 
 ```typescript
-prompt({}: BiometricPluginPromptBody) => any
+prompt({}: BiometricPluginPromptBody) => Promise<void>
 ```
 
 | Param     | Type                                                                            |
 | --------- | ------------------------------------------------------------------------------- |
 | **`__0`** | <code><a href="#biometricpluginpromptbody">BiometricPluginPromptBody</a></code> |
-
-**Returns:** <code>any</code>
 
 --------------------
 
@@ -62,10 +58,10 @@ prompt({}: BiometricPluginPromptBody) => any
 ### createAsymmetricKeys()
 
 ```typescript
-createAsymmetricKeys() => any
+createAsymmetricKeys() => Promise<CreateAsymmetricKeysResponse>
 ```
 
-**Returns:** <code>any</code>
+**Returns:** <code>Promise&lt;<a href="#createasymmetrickeysresponse">CreateAsymmetricKeysResponse</a>&gt;</code>
 
 --------------------
 
@@ -73,10 +69,8 @@ createAsymmetricKeys() => any
 ### createSymmetricKey()
 
 ```typescript
-createSymmetricKey() => any
+createSymmetricKey() => Promise<void>
 ```
-
-**Returns:** <code>any</code>
 
 --------------------
 
@@ -84,10 +78,10 @@ createSymmetricKey() => any
 ### readPublicKey()
 
 ```typescript
-readPublicKey() => any
+readPublicKey() => Promise<Response<string>>
 ```
 
-**Returns:** <code>any</code>
+**Returns:** <code>Promise&lt;<a href="#response">Response</a>&lt;string&gt;&gt;</code>
 
 --------------------
 
@@ -95,10 +89,8 @@ readPublicKey() => any
 ### deleteAsymmetricKeys()
 
 ```typescript
-deleteAsymmetricKeys() => any
+deleteAsymmetricKeys() => Promise<void>
 ```
-
-**Returns:** <code>any</code>
 
 --------------------
 
@@ -106,10 +98,8 @@ deleteAsymmetricKeys() => any
 ### deleteSymmetricKey()
 
 ```typescript
-deleteSymmetricKey() => any
+deleteSymmetricKey() => Promise<void>
 ```
-
-**Returns:** <code>any</code>
 
 --------------------
 
@@ -117,14 +107,12 @@ deleteSymmetricKey() => any
 ### writeData(...)
 
 ```typescript
-writeData({}: WriteDataBody) => any
+writeData({}: WriteDataBody) => Promise<void>
 ```
 
 | Param     | Type                                                    |
 | --------- | ------------------------------------------------------- |
 | **`__0`** | <code><a href="#writedatabody">WriteDataBody</a></code> |
-
-**Returns:** <code>any</code>
 
 --------------------
 
@@ -132,14 +120,14 @@ writeData({}: WriteDataBody) => any
 ### readData(...)
 
 ```typescript
-readData({}: ReadDataBody) => any
+readData({}: ReadDataBody) => Promise<Response<string>>
 ```
 
 | Param     | Type                                                  |
 | --------- | ----------------------------------------------------- |
 | **`__0`** | <code><a href="#readdatabody">ReadDataBody</a></code> |
 
-**Returns:** <code>any</code>
+**Returns:** <code>Promise&lt;<a href="#response">Response</a>&lt;string&gt;&gt;</code>
 
 --------------------
 
@@ -147,14 +135,12 @@ readData({}: ReadDataBody) => any
 ### deleteData(...)
 
 ```typescript
-deleteData({}: DeleteDataBody) => any
+deleteData({}: DeleteDataBody) => Promise<void>
 ```
 
 | Param     | Type                                                      |
 | --------- | --------------------------------------------------------- |
 | **`__0`** | <code><a href="#deletedatabody">DeleteDataBody</a></code> |
-
-**Returns:** <code>any</code>
 
 --------------------
 
@@ -162,14 +148,14 @@ deleteData({}: DeleteDataBody) => any
 ### hasData(...)
 
 ```typescript
-hasData({}: HasDataBody) => any
+hasData({}: HasDataBody) => Promise<Response<boolean>>
 ```
 
 | Param     | Type                                                |
 | --------- | --------------------------------------------------- |
 | **`__0`** | <code><a href="#hasdatabody">HasDataBody</a></code> |
 
-**Returns:** <code>any</code>
+**Returns:** <code>Promise&lt;<a href="#response">Response</a>&lt;boolean&gt;&gt;</code>
 
 --------------------
 
@@ -177,10 +163,10 @@ hasData({}: HasDataBody) => any
 ### areAsymmetricKeysCreated()
 
 ```typescript
-areAsymmetricKeysCreated() => any
+areAsymmetricKeysCreated() => Promise<Response<boolean>>
 ```
 
-**Returns:** <code>any</code>
+**Returns:** <code>Promise&lt;<a href="#response">Response</a>&lt;boolean&gt;&gt;</code>
 
 --------------------
 
@@ -188,10 +174,10 @@ areAsymmetricKeysCreated() => any
 ### isSymmetricKeyCreated()
 
 ```typescript
-isSymmetricKeyCreated() => any
+isSymmetricKeyCreated() => Promise<Response<boolean>>
 ```
 
-**Returns:** <code>any</code>
+**Returns:** <code>Promise&lt;<a href="#response">Response</a>&lt;boolean&gt;&gt;</code>
 
 --------------------
 
