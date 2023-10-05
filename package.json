@@ -75,5 +75,5 @@
   "swiftlint": "@ionic/swiftlint-config",
   "types": "dist/esm/index.d.ts",
   "unpkg": "dist/plugin.js",
-  "version": "0.0.6"
+  "version": "0.0.7"
 }
